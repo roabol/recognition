@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Reconhecimento de Atividades</string>
+
+    <string name="liga">Liga</string>
+    <string name="desliga">Desliga</string>
+    <string name="limpa_log">Limpar Log</string>
+
+    <string name="title_activity_permission_rational">PermissionRationalActivity</string>
+    <string name="main_message_activity_permission_rational">Rastreia as mudanças de atividades, permitindo ler as transições de atividade do seu telefone.</string>
+    <string name="details_message_activity_permission_rational">A experiência deste aplicativo requer acesso às transições de atividade do telefone para exibir as alterações de andar para ficar parado.</string>
+    <string name="no_thanks_activity_permission_rational">Não Obrigado</string>
+    <string name="continue_activity_permission_rational">Continuar</string>
+
+</resources>
