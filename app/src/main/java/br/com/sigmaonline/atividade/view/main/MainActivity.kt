@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    // region inner class - classe que escuta as respostas do SO sobre a mudança de estado do usuário
     inner class TransitionsReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
@@ -113,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                 if (result != null) {
                     for (event in result.transitionEvents) {
                         val info = SimpleDateFormat("HH:mm:ss", Locale.US).format(Date()) +
-                                " Transition: " + toActivityString(event.activityType) + " (" + toTransitionType(event.transitionType) + ")";
+                                " Transition: " + toActivityString(event.activityType) + " (" + toTransitionType(event.transitionType) + ")"
 
                         printToScreen(info)
                     }
@@ -121,6 +122,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    // endregion
 
     // region Verifica permissões ACTIVITY_RECOGNITION
     private fun activityRecognitionPermissionApproved(): Boolean {
