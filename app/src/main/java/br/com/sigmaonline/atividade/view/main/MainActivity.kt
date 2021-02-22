@@ -1,6 +1,7 @@
 package br.com.sigmaonline.atividade.view.main
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -24,9 +25,11 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private var activityTrackingEnabled = false
+    private var mPendingIntent2: PendingIntent? = null
 
     private lateinit var mLogFragment: LogFragment
-    private lateinit var mPendingIntent: PendingIntent
+    private lateinit var mBtnRequestUpdate: Button
+    private lateinit var mPendingIntent1: PendingIntent
     private lateinit var mTransitionsReceiver: TransitionsReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,8 +37,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mLogFragment = (supportFragmentManager.findFragmentById(R.id.log_fragment) as LogFragment?)!!
+        mBtnRequestUpdate = findViewById(R.id.bt_request_update)
+        mBtnRequestUpdate.isEnabled = false
 
-        mPendingIntent = PendingIntent.getBroadcast(this@MainActivity, 0, Intent(TRANSITIONS_RECEIVER_ACTION), 0)
+        mPendingIntent1 = PendingIntent.getBroadcast(this@MainActivity, 0, Intent(TRANSITIONS_RECEIVER_ACTION), 0)
 
         mTransitionsReceiver = TransitionsReceiver()
 
@@ -62,21 +67,50 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickEnableOrDisableActivityRecognition(view: View) {
-        if ((view as Button).text == "Liga") {
+        mBtnRequestUpdate.isEnabled = (view as Button).text == "Liga"
+        if (view.text == "Liga") {
             view.text = getString(R.string.desliga)
             enableActivityTransitions()
         } else {
             view.text = getString(R.string.liga)
             disableActivityTransitions()
+            if (mPendingIntent2 != null) {
+                onClickRequestUpdate(mBtnRequestUpdate)
+            }
         }
     }
 
-    fun onClickClearLog(view: View) {
-        mLogFragment.getLogView().clearLog()
+    fun onClickRequestUpdate(view: View) {
+        if ((view as Button).text == getString(R.string.request_update_on)) {
+            view.text = getString(R.string.request_update_off)
+            mPendingIntent2 = PendingIntent.getBroadcast(this@MainActivity, 0, Intent(TRANSITIONS_RECEIVER_ACTION), 0)
+            ActivityRecognition.getClient(this).requestActivityUpdates(Long.MIN_VALUE, mPendingIntent2!!)
+        } else {
+            view.text = getString(R.string.request_update_on)
+            ActivityRecognition.getClient(this).removeActivityUpdates(mPendingIntent2!!)
+            mPendingIntent2 = null
+        }
+    }
+
+    fun onClickClearLog(@Suppress("UNUSED_PARAMETER") view: View) {
+        val alertDialog: AlertDialog? = this.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setPositiveButton(R.string.sim) { _, _ ->
+                    mLogFragment.getLogView().clearLog()
+                }
+                setNegativeButton(R.string.nao) { _, _ ->
+                }
+            }
+            builder.setTitle(R.string.confirma)
+            // Create the AlertDialog
+            builder.create()
+        }
+        alertDialog?.show()
     }
 
     private fun enableActivityTransitions() {
-        val task = ActivityRecognition.getClient(this).requestActivityTransitionUpdates(buildTransitionRequest(), mPendingIntent)
+        val task = ActivityRecognition.getClient(this).requestActivityTransitionUpdates(buildTransitionRequest(), mPendingIntent1)
         task.addOnSuccessListener {
             activityTrackingEnabled = true
             printToScreen(SimpleDateFormat("HH:mm:ss", Locale.US).format(Date()) + " Transitions Api was successfully registered.")
@@ -88,9 +122,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun disableActivityTransitions() {
-        ActivityRecognition.getClient(this).removeActivityTransitionUpdates(mPendingIntent)
+        ActivityRecognition.getClient(this).removeActivityTransitionUpdates(mPendingIntent1)
             .addOnSuccessListener {
-                activityTrackingEnabled = true
+                activityTrackingEnabled = false
+                mPendingIntent1.cancel()
                 printToScreen(SimpleDateFormat("HH:mm:ss", Locale.US).format(Date()) + " Transitions successfully unregistered.")
             }
             .addOnFailureListener {
@@ -105,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             printToScreen(SimpleDateFormat("HH:mm:ss", Locale.US).format(Date()) + " onReceive called")
 
             if (!TextUtils.equals(TRANSITIONS_RECEIVER_ACTION, intent.action)) {
-                printToScreen("Received an unsupported action in TransitionsReceiver: action = " + intent.action)
+                printToScreen(SimpleDateFormat("HH:mm:ss", Locale.US).format(Date()) + " Received an unsupported action in TransitionsReceiver: action = " + intent.action)
                 return
             }
 

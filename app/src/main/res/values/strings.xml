@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Reconhecimento de Atividades</string>
 
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="confirma">Confirma a limpeza do LOG?</string>
+
     <string name="liga">Liga</string>
     <string name="desliga">Desliga</string>
+    <string name="request_update_on">Request Update On</string>
+    <string name="request_update_off">Request Update Off</string>
     <string name="limpa_log">Limpar Log</string>
 
     <string name="title_activity_permission_rational">PermissionRationalActivity</string>

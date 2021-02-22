@@ -35,6 +35,18 @@
         android:text="@string/liga"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/bt_request_update" />
+
+    <Button
+        android:id="@+id/bt_request_update"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:height="100dp"
+        android:onClick="onClickRequestUpdate"
+        android:text="@string/request_update_on"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/bt_liga_desliga"
         app:layout_constraintRight_toLeftOf="@id/bt_clear" />
 
     <Button
@@ -46,7 +58,7 @@
         android:onClick="onClickClearLog"
         android:text="@string/limpa_log"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/bt_liga_desliga"
+        app:layout_constraintLeft_toRightOf="@id/bt_request_update"
         app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
