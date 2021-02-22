@@ -241,9 +241,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun toActivityString(activity: Int): String {
         return when (activity) {
-            DetectedActivity.STILL -> "STILL"
-            DetectedActivity.WALKING -> "WALKING"
             DetectedActivity.IN_VEHICLE -> "IN_VEHICLE"
+            DetectedActivity.ON_BICYCLE -> "ON_BICYCLE"
+            DetectedActivity.WALKING -> "WALKING"
+            DetectedActivity.RUNNING -> "RUNNING"
+            DetectedActivity.STILL -> "STILL"
             else -> "UNKNOWN"
         }
     }
